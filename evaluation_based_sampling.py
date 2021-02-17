@@ -72,94 +72,53 @@ def evaluate_program(ast,local_env,func):
 
     elif type(exp) is list:
         op = exp[0]
-        #print("current op is", op)
         args = exp[1:]
-        #print("current args:", args)
         
         if op == 'sample':
-            #dist = evaluate_program(args,local_env)
-            #print("distribution is")
             return env['sample*'](evaluate_program(args,local_env,func))
         elif op == 'observe':
-            #ignore?
-            #env['observe*'](evaluate_program(args,local_env,func))
             return torch.tensor(float(0))
-            #return (evaluate_program(args,local_env,func))
         elif type(op) == int or type(op)== float:
             return op
         elif op == 'let':
-            #print("\n let statement!! \n")
             args = args[0]
             varname = args[0]
-            #print("varname is", varname)
-            #print("args[1] is:", args[1])
             c1 = evaluate_program(args[1],local_env,func)
-            #print("\n here is c1", c1)
             local_env[varname]=c1 #add to dictionary
-            #print("new local env is", local_env) 
             return evaluate_program(exp[2:],local_env,func)
         elif op == 'if':
-            #print("boolean is", exp[1])
-            #if exp[1]:
             if evaluate_program(exp[1],local_env,func):
                 return evaluate_program(exp[2],local_env,func)
             else:
                 return evaluate_program(exp[3],local_env,func)
-        #elif type(op) == str and op in local_env.keys()
-        #else:
         elif op[0] == 'defn':
-            #print("uh oh!!")
             fname = op[1]
-            #print(fname)
             numvars = len(op[2])
-            #print(numvars)
             body = op[3]
-            #print(body)
             func[fname] = [ op[2],op[3]]
-            #print(func[fname])
-            #print(func)
-            #print(args)
             return evaluate_program(args,local_env,func)
         else:
             c =[]
             for i in range(0, len(args)):
                 c.append(evaluate_program(args[i], local_env,func))
-            #for i in range(1,len(args)):
-            #    c[i] = evaluate_program(args[i])
             if type(op) == str:
-                #print("current expression is: ",exp)
-                #print("op is: ", op)
-                #print("args is:",args)
-                #print("env[op] is:", env[op])
-                #print("c is", c)
                 if op in list(env.keys()):
                     result = env[op](*c)
-                    #print("result is:", result)
                     return result
                 elif op in list(func.keys()):
-                    #print("\n \n using local variable: ", op)
                     variables = func[op][0]
                     body = func[op][1]
                     new_env = {}
                     for i in range(0,len(variables)):
                         print(variables[i])
-                        #local_env[variables[i]] = c[i]
                         if type(c[i]) is list:
                             new_env[variables[i]] = c[i].copy()
                         else:
                             new_env[variables[i]] = c[i]
-                        #print("\n \n local_env[variables[i]]", local_env[variables[i]])
-                        #print("\n \n local_env[variables[i]]", new_env[variables[i]])
-                        #print("\n \n c[i] is", c[i])
-                    #print(local_env)
-                    #return evaluate_program(body,local_env,func)
-                    #print("\n new env: ", new_env)
                     return evaluate_program(body,new_env,func)
                 else:
                     print("current op giving error: ", op)
                     raise("operation type invalid", op)
-                #return env[op](*c)
-                #return env[op]( *map (lambda a: evaluate_program(a,local_env),args) )
             else:
                 print(op)
                 raise("operation type invalid", op)
@@ -184,8 +143,6 @@ def get_stream(ast):
 def run_deterministic_tests():
     
     for i in range(1,14):
-        #note: this path should be with respect to the daphne path!
-        #ast = daphne(['desugar', '-i', '../../CS532-HW2/programs/tests/deterministic/test_{}.daphne'.format(i)])
         ast = daphne(['desugar', '-i', '../../cpsc532_hw2/programs/tests/deterministic/test_{}.daphne'.format(i)])
 
         print("abstract syntax tree is:", ast)
@@ -230,12 +187,21 @@ def run_probabilistic_tests():
     
     print('All probabilistic tests passed')    
 
-        
+
+def plot_tests():
+    num_samples = 10
+
+    graph1 = daphne(['desugar', '-i', '../../cpsc532_hw2/programs/tests/deterministic/test_1.daphne'])
+
+    graph2 = daphne(['desugar', '-i', '../../cpsc532_hw2/programs/tests/deterministic/test_2.daphne'])
+
+
+
 if __name__ == '__main__':
 
     run_deterministic_tests()
     
-    #run_probabilistic_tests()
+    run_probabilistic_tests()
 
     local_env = {}
     func = {}
@@ -247,8 +213,3 @@ if __name__ == '__main__':
         print('\n\n\nSample of prior of program {}:'.format(i))
         print(evaluate_program(ast,local_env,func))
 
-
-
-
-#{'observe-data': [['_', 'data', 'slope', 'bias'], 
-# ['let', ['xn', ['first', 'data']], ['let', ['yn', ['second', 'data']], ['let', ['zn', ['+', ['*', 'slope', 'xn'], 'bias']], ['let', ['dontcare0', ['observe', ['normal', 'zn', 1.0], 'yn']], ['rest', ['rest', 'data']]]]]]]}

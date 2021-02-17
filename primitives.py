@@ -2,49 +2,12 @@ import torch
 import torch.distributions as dist
 import math
 
-#TODO
-
-# what do I do here???
-
-# implement some primitives using pytorch? like what, for example?
- 
-
-#def funcprimitives()
-## TODO
  
 
 def vector(*args):
-    #print(type(args[0]))
+
     result = [args[i] for i in range(len(args))]
-    #print(type(result[0]))
-    #print(type(result))
-    #final = torch.Tensor(result)
-    #print(type(final))
-    #print(final.size())
     return result
-
-#def defn(vars,body):
-
-
-
-#def vector(*args):
-    #print(type(args[0]))
-#    result = [args[i] for i in range(len(args))]
-#    if issubclass(type(result[0]),torch.distributions.distribution.Distribution):
-#        return result
-#    else:
-#        print("input of vector is:")
-#        print(args)
-#        print(type(args[0]))
-#        return torch.Tensor(result)
-    #if type(args[0]) == torch.Tensor or type(args[0]) == int or type(args[0]) == float:
-    #    
-    #    print("vector result is")
-    #    print(result)
-    #    return torch.Tensor(result)
-    #else:
-    #    result = [args[i] for i in range(len(args))]
-    #    return result
 
 
 def sample(distr):
@@ -97,7 +60,6 @@ def hashmap(*args):
 
 
 
-
 def observe(args):
     return args
 
@@ -105,7 +67,6 @@ def iff(boo,if_true,if_false):
     if boo:
         return float(if_true)
     else:
-        #return torch.Tensor(if_false)
         return float(if_false)
 
 
@@ -145,13 +106,3 @@ def my_sqrt(x):
         return torch.sqrt(torch.tensor(float(x)))
     else:
         return torch.sqrt(x)
-
-
-def my_mult(x):
-    return x
-
-
-
-# sigma
-
-# lik

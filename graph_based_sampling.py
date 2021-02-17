@@ -53,20 +53,11 @@ def deterministic_eval(exp):
 
 
 def ancestral_eval(exp,functions):
-    #print("functions are: ",functions)
-    #print("current expression:  ", exp)
-    #print("type of exp is:  ",type(exp))
-    #print("type of functions is:  ",type(functions))
-
     if type(exp) is list:
         op = exp[0]
-        #print("operation is:  ",op)
-        #print(type(functions[op]))
         args = exp[1:]
-        #print("arguments are:  ", args)
         return functions[op](*map(lambda a: ancestral_eval(a,functions),args))
     elif type(exp) is int or type(exp) is float:
-        #print("we have a float")
         return torch.tensor(float(exp))
     elif type(exp) is str and exp in list(functions.keys()):
         new_exp = functions[exp]
@@ -79,20 +70,15 @@ def ancestral_eval(exp,functions):
 
 def sample_from_joint(graph):
     "This function does ancestral sampling starting from the prior."
-    # TODO insert your code here
     functions = {**env, **graph[1]['P']}
 
     if type(graph) is list:
         output_exp = graph[2]
-        ##print(output_vars)
         if type(output_exp) == list:
-            #result_list = [ ancestral_eval(graph[1]['P'][v],functions) for v in output_vars]
             result = ancestral_eval(output_exp,functions)
             print("sample value is:",result)
             return result
         elif type(output_exp) == str:
-            #print("evaluating the link function")
-            #print(graph[1]['P'][output_exp])
             result = ancestral_eval(graph[1]['P'][output_exp],functions)
             print("sample value is:", result)
             return result
@@ -141,7 +127,7 @@ def run_deterministic_tests():
         except AssertionError:
             raise AssertionError('return value {} is not equal to truth {} for graph {}'.format(ret,truth,graph))
     
-        print('Test passed')
+        print('Deterministic Test {} passed'.format(i))
         
     print('All deterministic tests passed')
     
@@ -172,39 +158,74 @@ def run_probabilistic_tests():
         
         print('p value', p_val)
         assert(p_val > max_p_value)
-        print('Test passed')
+        print('Probabilistic Test {} passed'.format(i))
     
     print('All probabilistic tests passed')    
 
 
 def plot_tests():
     num_samples = 10
-    samples = []
-
-    num_bins = 10
-
-    graph = daphne(['graph','-i','../../cpsc532_hw2/programs/1.daphne'])
-    print('\n\n\nSample of prior of program:')
-
-    for i in range(0,num_samples):
-        samples.append(sample_from_joint(graph))
     
-    print(samples)
 
-    plt.hist(samples,num_bins,facecolor='blue', alpha=0.5)
+    num_bins = 20
 
-    plt.show()
-
+    #samples1 = []
 
 
-        
+    #graph1 = daphne(['graph','-i','../../cpsc532_hw2/programs/1.daphne'])
+    
+    #for i in range(0,num_samples):
+    #    samples.append(sample_from_joint(graph1))
+
+    #plt.hist(samples1,num_bins,facecolor='blue', alpha=0.5)
+    #plt.show()
+
+
+    #graph2 = daphne(['graph','-i','../../cpsc532_hw2/programs/2.daphne'])
+    #print('\n\n\nSample of prior of program:')
+
+    #for i in range(0,num_samples):
+    #    samples.append(sample_from_joint(graph))
+    
+    #print(samples)
+
+    #plt.hist(samples,num_bins,facecolor='blue', alpha=0.5)
+    #plt.hist(samples,num_bins,facecolor='blue', alpha=0.5)
+    #plt.hist(samples,num_bins,facecolor='blue')
+
+
+    #plt.show()
+
+
+    samples1 = []
+    samples2 = []
+
+    #for i in range(0,num_samples):
+    #    samples1.append(sample_from_joint(graph2)[0])
+    #    samples2.append(sample_from_joint(graph2)[1])
+
+    #plt.hist(samples1,num_bins,facecolor='blue', alpha=0.5)
+
+    #plt.show()
+
+    #plt.hist(samples2,num_bins,facecolor='blue', alpha=0.5)
+
+    #plt.show()
+
+    #graph3 = daphne(['graph','-i','../../cpsc532_hw2/programs/3.daphne'])
+    #s = sample_from_joint(graph3)
+    #print(len(s))#17
+
+
+
+    #graph4 = daphne(['graph','-i','../../cpsc532_hw2/programs/3.daphne'])
+    #sample_from_joint(graph4)
+    #print(len(s))#
+
         
 if __name__ == '__main__':
     
-    plot_tests()
-
-
-
+    #plot_tests()
     run_deterministic_tests()
     run_probabilistic_tests()
 
