@@ -128,10 +128,10 @@ def run_deterministic_tests():
     
     for i in range(1,14):
         #note: this path should be with respect to the daphne path!
-        graph = daphne(['graph','-i','../../CS532-HW2/programs/tests/deterministic/test_{}.daphne'.format(i)])
-        print(i)
-        print(graph)
-        print(graph[-1])
+        graph = daphne(['graph','-i','../../cpsc532_hw2/programs/tests/deterministic/test_{}.daphne'.format(i)])
+        #print(i)
+        #print(graph)
+        #print(graph[-1])
         truth = load_truth('programs/tests/deterministic/test_{}.truth'.format(i))
         print("truth is:", truth)
         ret = deterministic_eval(graph[-1])
@@ -156,13 +156,13 @@ def run_probabilistic_tests():
     for i in range(5,7):
         
         #note: this path should be with respect to the daphne path!        
-        graph = daphne(['graph', '-i', '../../CS532-HW2/programs/tests/probabilistic/test_{}.daphne'.format(i)])
-        print(graph)
-        print(graph[0])
-        print(graph[2])
-        print(type(graph[2]))
+        graph = daphne(['graph', '-i', '../../cpsc532_hw2/programs/tests/probabilistic/test_{}.daphne'.format(i)])
+        #print(graph)
+        #print(graph[0])
+        #print(graph[2])
+        #print(type(graph[2]))
 
-        print(sample_from_joint(graph))
+        #print(sample_from_joint(graph))
 
         truth = load_truth('programs/tests/probabilistic/test_{}.truth'.format(i))
         
@@ -177,14 +177,23 @@ def run_probabilistic_tests():
     print('All probabilistic tests passed')    
 
 
-def run_bigtests():
+def plot_tests():
     num_samples = 10
+    samples = []
 
-    graph = daphne(['graph','-i','../../CS532-HW2/programs/1.daphne'])
+    num_bins = 10
+
+    graph = daphne(['graph','-i','../../cpsc532_hw2/programs/1.daphne'])
     print('\n\n\nSample of prior of program:')
 
     for i in range(0,num_samples):
+        samples.append(sample_from_joint(graph))
+    
+    print(samples)
 
+    plt.hist(samples,num_bins,facecolor='blue', alpha=0.5)
+
+    plt.show()
 
 
 
@@ -192,24 +201,27 @@ def run_bigtests():
         
 if __name__ == '__main__':
     
+    plot_tests()
 
-    #run_deterministic_tests()
+
+
+    run_deterministic_tests()
     run_probabilistic_tests()
 
 
-    #graph = daphne(['graph','-i','../../CS532-HW2/programs/1.daphne'])
+    #graph = daphne(['graph','-i','../../cpsc532_hw2/programs/1.daphne'])
     #print('\n\n\nSample of prior of program:')
     #print(graph)
     #print(sample_from_joint(graph)) 
 
     #i=2
-    #graph = daphne(['graph','-i','../../CS532-HW2/programs/{}.daphne'.format(i)])
+    #graph = daphne(['graph','-i','../../cpsc532_hw2/programs/{}.daphne'.format(i)])
     #print(graph)
     #print('\n\n\nSample of prior of program {}:'.format(i))
     #print(sample_from_joint(graph)) 
 
     #for i in range(4,5):
-    #    graph = daphne(['graph','-i','../../CS532-HW2/programs/{}.daphne'.format(i)])
+    #    graph = daphne(['graph','-i','../../cpsc532_hw2/programs/{}.daphne'.format(i)])
     #    print(graph)
     #    print('\n\n\nSample of prior of program {}:'.format(i))
     #    print("expression we want to evaluate: ", graph[2])

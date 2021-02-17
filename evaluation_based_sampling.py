@@ -46,34 +46,19 @@ def evaluate_program(ast,local_env,func):
     programming context means generating samples of 
     the return value)
     """
-    print("ast input is:", ast)
 
     if not ast:
         return ast
 
-    #print("type is:", type(ast))
 
-    #print("func is: ", func)
-    
-    #print(local_env)
-
-    #print("input local env is", local_env)
-
-    #if type(ast) is list:
-    #    exp = ast[0]
     if type(ast) is int or type(ast) is float:
         return torch.tensor(float(ast))
     elif type(ast) is torch.Tensor:
         return ast
-    elif type(ast)==str: #and ast in local_env.keys:
-        #print("\n \n \n here!!! \n \n")
-        #print(ast)
-        #print(local_env[ast])
+    elif type(ast)==str:
         return local_env[ast]
     else:
         exp = ast
-        #print("exp = ast = ", exp)
-
 
 
     if type(exp) is list:
@@ -81,15 +66,7 @@ def evaluate_program(ast,local_env,func):
             exp = exp[0]
 
 
-    #print("exp at line 73  is", exp)
-
-
-  
-
     if type(exp) is str:
-        #print("line 115", exp)
-        #print(local_env[exp])
-        #print(local_env)
         return evaluate_program(local_env[exp],local_env,func)
 
 
@@ -208,7 +185,9 @@ def run_deterministic_tests():
     
     for i in range(1,14):
         #note: this path should be with respect to the daphne path!
-        ast = daphne(['desugar', '-i', '../../CS532-HW2/programs/tests/deterministic/test_{}.daphne'.format(i)])
+        #ast = daphne(['desugar', '-i', '../../CS532-HW2/programs/tests/deterministic/test_{}.daphne'.format(i)])
+        ast = daphne(['desugar', '-i', '../../cpsc532_hw2/programs/tests/deterministic/test_{}.daphne'.format(i)])
+
         print("abstract syntax tree is:", ast)
         truth = load_truth('programs/tests/deterministic/test_{}.truth'.format(i))
         local_env = {}
@@ -235,7 +214,8 @@ def run_probabilistic_tests():
     
     for i in range(5,7):
         #note: this path should be with respect to the daphne path!        
-        ast = daphne(['desugar', '-i', '../../CS532-HW2/programs/tests/probabilistic/test_{}.daphne'.format(i)])
+        #ast = daphne(['desugar', '-i', '../../CS532-HW2/programs/tests/probabilistic/test_{}.daphne'.format(i)])
+        ast = daphne(['desugar', '-i', '../../cpsc532_hw2/programs/tests/deterministic/test_{}.daphne'.format(i)])
         truth = load_truth('programs/tests/probabilistic/test_{}.truth'.format(i))
         print("abstract syntax tree is:", ast)
         
@@ -253,7 +233,7 @@ def run_probabilistic_tests():
         
 if __name__ == '__main__':
 
-    #run_deterministic_tests()
+    run_deterministic_tests()
     
     #run_probabilistic_tests()
 
@@ -261,7 +241,8 @@ if __name__ == '__main__':
     func = {}
 
     for i in range(3,4):
-        ast = daphne(['desugar', '-i', '../../CS532-HW2/programs/{}.daphne'.format(i)])
+        #ast = daphne(['desugar', '-i', '../../CS532-HW2/programs/{}.daphne'.format(i)])
+        ast = daphne(['desugar', '-i', '../../cpsc532_hw2/programs/tests/deterministic/test_{}.daphne'.format(i)])
         print("abstract syntax tree is:", ast)
         print('\n\n\nSample of prior of program {}:'.format(i))
         print(evaluate_program(ast,local_env,func))
